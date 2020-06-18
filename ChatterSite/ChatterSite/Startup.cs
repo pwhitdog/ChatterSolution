@@ -1,7 +1,6 @@
+using ChatterSite.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +22,7 @@ namespace ChatterSite
         {
             services.AddControllersWithViews();
 
+            services.AddSignalR();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
         }
@@ -52,6 +52,7 @@ namespace ChatterSite
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHub<WebRtcHub>("/chathub");
             });
 
             app.UseSpa(spa =>
