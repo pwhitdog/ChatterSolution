@@ -1,5 +1,4 @@
 import * as React from "react";
-import {connect} from "react-redux";
 import {Form, Formik} from "formik";
 import {ValidatedTextField} from "../Shared/ValidatedTextField";
 import {Button} from "@material-ui/core";
@@ -8,64 +7,59 @@ import useStyles from "../Shared/SharedStyles";
 import OurHubConnection from "../Shared/OurHubConnection";
 import {bindActionCreators} from "redux";
 import {setRoom} from "../../actions/roomAction";
+import {connect} from "react-redux";
 
-const Member = props => {
+const JoinRoom = props => {
     const classes = useStyles();
     
-    async function createRoom(roomName) {
-        const connection = await OurHubConnection(props)
-        console.log(connection, '*****')
-        await connection.invoke("CreateCall", props.username, roomName)
+    async function joinRoom(data) {
+        const connection = await OurHubConnection({})
+        console.log(connection)
+        await connection.invoke("Join", data.name, data.room)
             .catch(err => console.error(err));
-        props.actions.setRoom(roomName)
-    }  
-    
+        props.actions.setRoom(data.room)
+    }
     return (
         <div>
-            <h2>Hello {props.username}!</h2>
-            
             <Formik
                 className={classes.form}
                 validateOnChange={true}
-                initialValues={{room: ''}}
+                initialValues={{room: '', name: ''}}
                 onSubmit={async (data, {setSubmitting}) => {
                     setSubmitting(true);
-                    await createRoom(data.room);
+                    await joinRoom(data);
                     setSubmitting(false);
                 }}>
                 {({values, isSubmitting, error}) => (
                     <Form>
-                        <label>Start a room</label>
+                        <label>Enter the room's name:</label>
                         <ValidatedTextField
                             name="room"
                             type="input"
-                            placeholder="Room Name"
+                            placeholder="Room name"
                             label="Create a room name"
+                        />
+                        <label>Enter your name:</label>
+                        <ValidatedTextField
+                            name="name"
+                            type="input"
+                            placeholder="Your name"
+                            label="Enter your name"
                         />
                         <Button
                             type="submit"
                             disabled={isSubmitting}
                             className={classes.submit}
                             fullWidth={true}
-                        >Create Room
+                        >Join Room
                         </Button>
-                        <Typography className={classes.error} variant="h5">{props.error}</Typography>
+                        <Typography className={classes.error} variant="h5">Please check the name and enter it again</Typography>
                     </Form>
                 )}
             </Formik>
         </div>
     )
 }
-
-const mapStateToProps = state => {
-    return {
-        username: state.login.username,
-        isLoggedIn: state.login.isLoggedIn,
-        roles: state.login.roles,
-        token: state.login.token,
-        room: state.room.room,
-    };
-};
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -75,4 +69,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Member)
+export default connect(null, mapDispatchToProps)(JoinRoom)

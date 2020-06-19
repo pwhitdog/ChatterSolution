@@ -34,13 +34,13 @@ namespace AuthServer.Controllers
         [HttpPost]
         public async Task<ObjectResult> Login([FromBody] LoginDto model)
         {
-            var userName = await _signInManager.UserManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-            // var result = await _signInManager.PasswordSignInAsync(userName, model.Password, true, false);
-            //
-            // if (!result.Succeeded)
-            // {
-            //     return BadRequest(JsonConvert.SerializeObject(new AuthObject { Error = "Incorrect username or password entered."}));
-            // }
+            var user = await _signInManager.UserManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+            
+            if (!result.Succeeded)
+            {
+                return BadRequest(JsonConvert.SerializeObject(new AuthObject { Error = "Incorrect username or password entered."}));
+            }
             
             var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
             var userRoles = await _userManager.GetRolesAsync(appUser);

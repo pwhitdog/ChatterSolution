@@ -4,7 +4,7 @@ import Admin from "./admin/Admin";
 import Member from "./member/Member";
 import JoinRoom from "./join-room/JoinRoom";
 
-const Home = (props) => (
+const Home = props => (
     <div>
         { props.isLoggedIn && props.roles.includes("Admin") &&
             <Admin />
@@ -12,7 +12,7 @@ const Home = (props) => (
         { props.isLoggedIn && props.roles.includes("Member") &&
             <Member />
         }
-        { !props.isLoggedIn &&
+        { !props.isLoggedIn && !props.room &&
             <JoinRoom />
         }        
 
@@ -23,7 +23,8 @@ const mapStateToProps = state => {
     return {
         username: state.login.username,
         isLoggedIn: state.login.isLoggedIn,
-        roles: state.login.roles
+        roles: state.login.roles,
+        room: state.room.room,
     };
 };
 
