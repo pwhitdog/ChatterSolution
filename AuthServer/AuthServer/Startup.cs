@@ -39,10 +39,8 @@ namespace AuthServer
             
             services.AddMvc();
             
-            services.AddEntityFrameworkNpgsql().AddDbContext<BackendContext>(opt =>
-            {
-                opt.UseNpgsql(Configuration.GetConnectionString("Booger"));
-            });
+            services.AddDbContext<BackendContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Booger")));
             
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<BackendContext>()
@@ -87,9 +85,11 @@ namespace AuthServer
             app.UseAuthentication();
             app.UseCors("AllowAllHeaders");
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            dbContext.Database.EnsureCreated();
+            // var isCreated = dbContext.Database.EnsureCreated();
+            // if (isCreated) return;
             var dbInitializer = new DbInitializer(userManager);
             dbInitializer.Initialize(dbContext).Wait();
+
         }
     }
 }

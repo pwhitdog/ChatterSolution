@@ -16,7 +16,6 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Copyright from "../Shared/Copyright";
-import {push} from "connected-react-router";
 
 const Login = props => {
     const classes = useStyles();
@@ -29,7 +28,7 @@ const Login = props => {
     return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
-            {/*<Grid item xs={false} sm={4} md={7} className={classes.image} />*/}
+            <Grid item xs={false} sm={4} md={7} className={classes.image} />
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>

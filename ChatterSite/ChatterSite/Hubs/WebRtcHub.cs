@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChatterSite.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -13,18 +14,27 @@ namespace ChatterSite.Hubs
         private static readonly List<User> Users = new List<User>();
 
         [Authorize(Roles = "Member")]
-        public async Task CreateCall(string username, string groupName)
+        public async Task CreateCall(string name, string group)
         {
             var user = new User
             {
-                Username = username,
+                Username = name,
                 ConnectionId = Context.ConnectionId,
-                GroupName = groupName,
+                GroupName = group,
                 IsOwner = true
             };
             
-            Users.Add(user);
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            var foundUser = Users.FirstOrDefault(x => x.Username == name);
+            if (foundUser != null)
+            {
+                foundUser = user;
+            }
+            else
+            {
+               Users.Add(user);
+            }
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            await SendUserListUpdate(group);
         }
 
         [Authorize(Roles = "Member")]
@@ -75,7 +85,7 @@ namespace ChatterSite.Hubs
 
         private async Task SendUserListUpdate(string groupName)
         {
-            await Clients.Group(groupName).SendAsync("Update", JsonConvert.SerializeObject(Users.Where(u => u.GroupName == groupName)));
+            await Clients.Group(groupName).SendAsync("Update", JsonConvert.SerializeObject(Users.Where(u => u.GroupName == groupName).ToList()));
         }
     }
 }

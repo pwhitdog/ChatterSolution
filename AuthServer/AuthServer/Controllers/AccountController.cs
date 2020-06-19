@@ -7,6 +7,7 @@ using AuthServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -33,13 +34,13 @@ namespace AuthServer.Controllers
         [HttpPost]
         public async Task<ObjectResult> Login([FromBody] LoginDto model)
         {
-            
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(JsonConvert.SerializeObject(new AuthObject { Error = "Incorrect username or password entered."}));
-            }
+            var userName = await _signInManager.UserManager.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            // var result = await _signInManager.PasswordSignInAsync(userName, model.Password, true, false);
+            //
+            // if (!result.Succeeded)
+            // {
+            //     return BadRequest(JsonConvert.SerializeObject(new AuthObject { Error = "Incorrect username or password entered."}));
+            // }
             
             var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
             var userRoles = await _userManager.GetRolesAsync(appUser);

@@ -24,36 +24,76 @@ namespace AuthServer.Models
         public async Task Initialize(BackendContext context)
         {
             IdentityRole admin;
-            
-            if (!context.Roles.Any(r => r.Name == "admin"))
+            // var tmp = context.Users.ToList();
+            // var tmp2 = context.Roles.ToList();
+            // var tmp3 = context.Roles.Any(r => r.Name == "Admin");
+
+            if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 admin = new IdentityRole
                 {
                     Name = "Admin",
                     NormalizedName = "ADMIN"
                 };
-                context.Roles.Add(admin);
+                await context.Roles.AddAsync(admin);
+                await context.SaveChangesAsync();
             }
             else
             {
                 admin = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
             }
+            
+            IdentityRole member;
+            
+            if (!context.Roles.Any(r => r.Name == "Member"))
+            {
+                member = new IdentityRole
+                {
+                    Name = "Member",
+                    NormalizedName = "MEMBER"
+                };
+                await context.Roles.AddAsync(member);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                member = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Member");
+            }
 
-            IdentityUser user;
             IdentityResult result;
             if (!context.Users.Any(u => u.Email == "admin@nope.com"))
             {
-                user = new IdentityUser
+                var user = new IdentityUser
                 {
                     Email = "admin@nope.com",
                     NormalizedEmail = "admin@nope.com",
-                    UserName = "Admin of All"
+                    UserName = "Admin",
+                    EmailConfirmed = true,
+                    
                 };
                 result = await _userManager.CreateAsync(user, "herpDerp1!");
                 await context.SaveChangesAsync();
                 result = await _userManager.AddToRoleAsync(user, admin.Name);
                 
                 context.SaveChangesAsync().Wait();
+            }
+            
+            if (!context.Users.Any(u => u.Email == "molly@nope.com"))
+            {
+                var memberUser = new IdentityUser
+                {
+                    Email = "molly@nope.com",
+                    NormalizedEmail = "molly@nope.com",
+                    UserName = "Molly",
+                    EmailConfirmed = true,
+                    LockoutEnabled = false,
+                    NormalizedUserName = "Molly O'Brian",
+                };
+                result = await _userManager.CreateAsync(memberUser, "herpDerp1!");
+                await context.SaveChangesAsync();
+                result = await _userManager.AddToRoleAsync(memberUser, member.Name);
+                
+                await context.SaveChangesAsync();
             }
 
         }
