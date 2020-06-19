@@ -19,7 +19,7 @@ import Copyright from "../Shared/Copyright";
 
 const Login = props => {
     const classes = useStyles();
-    const [toNext, setToNext] = useState(false);
+    const [setToNext] = useState(false);
 
     if(props.isLoggedIn) {
         window.location.href = '/'

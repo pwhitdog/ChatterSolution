@@ -1,72 +1,42 @@
 import * as React from "react";
 import {connect} from "react-redux";
-import loginValidationSchema from "../../Validations/LoginValidation";
 import {Form, Formik} from "formik";
 import {ValidatedTextField} from "../Shared/ValidatedTextField";
 import {Button} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import useStyles from "../Shared/SharedStyles";
-import * as signalR from "@microsoft/signalr";
-import {useState} from "react";
+import {OurHubConnection} from "../Shared/OurHubConnection";
 
 const Member = props => {
     const classes = useStyles();
-    const [toNext, setToNext] = useState(false);
-
-    const options = {
-        accessTokenFactory: () => {
-            return props.token;
-        }
-    };
-
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl(`/chatHub`, {
-            accessTokenFactory: () => {
-                return `${props.token}`
-            }
-        })
-        .configureLogging(signalR.LogLevel.Information)
-        .build();
-
-    async function start() {
-        try {
-            await connection.start();
-            console.log("connected");
-            connection.on("Update", (data) => console.log(data, '*****'))
-        } catch (err) {
-            console.log(err);
-            setTimeout(() => start(), 5000);
-        }
-    }
     
     async function createRoom(roomName) {
-        await connection.invoke("CreateCall", props.username, roomName).catch(err => console.error(err));
-    }
-    
-    start();
+        const connection = await OurHubConnection(props)
+        console.log(connection)
+        await connection.invoke("CreateCall", props.username, roomName)
+            .catch(err => console.error(err));
+    }  
     
     return (
         <div>
             <h2>Hello {props.username}!</h2>
+            
             <Formik
                 className={classes.form}
                 validateOnChange={true}
                 initialValues={{room: ''}}
-                // validationSchema={loginValidationSchema}
                 onSubmit={async (data, {setSubmitting}) => {
-                    // setSubmitting(true);
-                    console.log("test")
+                    setSubmitting(true);
                     await createRoom(data.room);
-                    // setSubmitting(false);
-                    // setToNext(props.isLoggedIn);
+                    setSubmitting(false);
                 }}>
                 {({values, isSubmitting, error}) => (
                     <Form>
-                        {/*{toNext ? <Redirect to="/" /> : null}*/}
+                        <label>Start a room</label>
                         <ValidatedTextField
                             name="room"
                             type="input"
-                            placeholder="room name"
+                            placeholder="Room Name"
                             label="Create a room name"
                         />
                         <Button
@@ -76,7 +46,6 @@ const Member = props => {
                             fullWidth={true}
                         >Create Room
                         </Button>
-
                         <Typography className={classes.error} variant="h5">{props.error}</Typography>
                     </Form>
                 )}

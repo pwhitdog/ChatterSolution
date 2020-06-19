@@ -27,12 +27,9 @@ namespace ChatterSite.Hubs
             var foundUser = Users.FirstOrDefault(x => x.Username == name);
             if (foundUser != null)
             {
-                foundUser = user;
+                Users.Remove(Users.Single(u => u.Username == name));
             }
-            else
-            {
-               Users.Add(user);
-            }
+            Users.Add(user);
             await Groups.AddToGroupAsync(Context.ConnectionId, group);
             await SendUserListUpdate(group);
         }
