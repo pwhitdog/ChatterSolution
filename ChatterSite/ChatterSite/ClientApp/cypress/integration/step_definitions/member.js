@@ -20,5 +20,6 @@ When(/^click the "([^"]*)" button$/, function () {
     cy.get('form').submit()
 });
 Then(/^I should have a room created to share$/, function () {
-
+    cy.contains('TEST ROOM')
+    cy.get('button').contains('Log Out').click()
 });

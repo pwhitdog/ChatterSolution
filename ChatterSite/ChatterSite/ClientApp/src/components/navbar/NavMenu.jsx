@@ -6,6 +6,7 @@ import './NavMenu.css';
 import {Button} from "@material-ui/core";
 import {bindActionCreators} from "redux";
 import {logout} from "../../actions/loginAction";
+import {removeRoom} from "../../actions/roomAction";
 
 const NavMenu = (props) => 
 {
@@ -15,6 +16,11 @@ const NavMenu = (props) =>
         console.log(isOpen)
     };
     
+    const fullLogoff = () => {
+        props.actions.logout()
+        props.actions.removeRoom()
+    }
+    
     return (
         <header>
             <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" light>
@@ -23,7 +29,7 @@ const NavMenu = (props) =>
                     <NavbarToggler onClick={toggle} className="mr-2"/>
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={isOpen} navbar>
                         { props.isLoggedIn &&
-                            <Button onClick={props.actions.logout}>Log Out</Button>
+                            <Button onClick={() => fullLogoff()}>Log Out</Button>
                         }
                         <ul className="navbar-nav flex-grow">
                             <NavItem>
@@ -60,6 +66,7 @@ const mapDispatchToProps = dispatch => {
     return {
         actions: bindActionCreators({
             logout,
+            removeRoom,
         },                          dispatch)
     };
 };

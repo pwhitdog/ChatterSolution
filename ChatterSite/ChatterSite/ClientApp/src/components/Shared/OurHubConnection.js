@@ -1,10 +1,10 @@
 import * as signalR from "@microsoft/signalr";
 
-const OurHubConnection = async props => {
+const OurHubConnection = async token => {
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(`/chatHub`, {
             accessTokenFactory: () => {
-                return `${props.token}`
+                return `${token}`
             }
         })
         .configureLogging(signalR.LogLevel.Information)

@@ -10,15 +10,11 @@ Then(`I will be on the {string} page`, (pageName) => {
 });
 
 Given(/^I am on the "([^"]*)" page$/,  (pageName) => {
-    cy.url().should('eq', Cypress.config().baseUrl)
+    cy.url().should('eq', Cypress.config().baseUrl + pageName)
 });
 
 When(/^I log in with email: "([^"]*)" and password: "([^"]*)"$/, (email, password) => {
     cy.get('input[name="email"]').type(email);
     cy.get('input[name="password"').type(password);
     cy.get('form').submit();
-});
-
-Then(/^I will be logged in$/,  () => {
-
 });

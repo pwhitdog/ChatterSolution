@@ -13,9 +13,10 @@ const JoinRoom = props => {
     const classes = useStyles();
     
     async function joinRoom(data) {
+        const { name, room } = data
         const connection = await OurHubConnection({})
         console.log(connection)
-        await connection.invoke("Join", data.name, data.room)
+        await connection.invoke("Join", name, room)
             .catch(err => console.error(err));
         props.actions.setRoom(data.room)
     }
