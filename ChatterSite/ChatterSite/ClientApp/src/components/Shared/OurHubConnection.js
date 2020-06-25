@@ -2,7 +2,7 @@ import * as signalR from "@microsoft/signalr";
 
 const OurHubConnection = async token => {
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl(`/chatHub`, {
+        .withUrl(`https://localhost:5005/chathub`, {
             accessTokenFactory: () => {
                 return `${token}`
             }

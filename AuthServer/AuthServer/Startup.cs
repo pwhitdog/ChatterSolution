@@ -26,17 +26,6 @@ namespace AuthServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAllHeaders",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
-            
             services.AddMvc();
             
             services.AddDbContext<BackendContext>(options =>
@@ -76,6 +65,12 @@ namespace AuthServer
             BackendContext dbContext,
             UserManager<IdentityUser> userManager)
         {
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("https://localhost:5003")
+                    .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+            });
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -83,7 +78,7 @@ namespace AuthServer
 
             app.UseRouting();
             app.UseAuthentication();
-            app.UseCors("AllowAllHeaders");
+            app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             // var isCreated = dbContext.Database.EnsureCreated();
             // if (isCreated) return;

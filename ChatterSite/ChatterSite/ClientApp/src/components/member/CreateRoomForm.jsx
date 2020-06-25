@@ -24,9 +24,7 @@ const CreateRoomForm = props => {
             validateOnChange={true}
             initialValues={{room: ''}}
             onSubmit={async (data, {setSubmitting}) => {
-                setSubmitting(true);
                 await createRoom(data.room);
-                setSubmitting(false);
             }}>
             {({values, isSubmitting, error}) => (
                 <Form>

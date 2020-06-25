@@ -22,7 +22,12 @@ const Login = props => {
     const [setToNext] = useState(false);
 
     if(props.isLoggedIn) {
-        window.location.href = '/'
+        if (props.roles.includes("Admin")) {
+            window.location.href = '/admin'
+        } else {
+            window.location.href = '/'
+        }
+        
     }
     
     return (
@@ -92,7 +97,8 @@ const Login = props => {
 const mapStateToProps = state => {
     return {
         error: state.login.error,
-        isLoggedIn: state.login.isLoggedIn
+        isLoggedIn: state.login.isLoggedIn,
+        roles: state.login.roles,
     }
 };
 

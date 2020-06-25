@@ -11,6 +11,7 @@ namespace AuthServer.Models
         public BackendContext(DbContextOptions<BackendContext> options) : base(options)
         {
         }
+        
     }
 
     public class DbInitializer

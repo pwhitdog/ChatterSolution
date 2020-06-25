@@ -1,5 +1,5 @@
 import { HANDLE_ERROR, LOGOUT, SET_USER } from '../constants';
-import { AUTH_SERVER_API } from '../api-endpoints';
+import { AUTH_SERVER_API_ACCOUNT } from '../api-endpoints';
 
 export const logout = () => {
     return {
@@ -9,7 +9,7 @@ export const logout = () => {
 
 export const login = (obj) => {
     return (dispatch) => {
-        fetch(AUTH_SERVER_API + 'login', {
+        fetch(AUTH_SERVER_API_ACCOUNT + 'login', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',

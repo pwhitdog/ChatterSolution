@@ -1,7 +1,15 @@
 import React from "react";
+import AdminMemberTable from "./AdminMemberTable";
+import CreateMemberForm from "./CreateMemberForm";
 
-const Admin = () => (
-    <h1>Sweet I am an Admin!</h1>
-);
+const Admin = () => {
+    return (
+        <div>
+            <AdminMemberTable />
+            <CreateMemberForm />
+        </div>
+    )        
+}
 
-export default Admin;
+export default Admin
+

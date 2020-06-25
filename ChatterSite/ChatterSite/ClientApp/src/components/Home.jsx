@@ -1,14 +1,10 @@
 import * as React from 'react';
 import {connect} from "react-redux";
-import Admin from "./admin/Admin";
 import Member from "./member/Member";
 import JoinRoom from "./join-room/JoinRoom";
 
 const Home = props => (
     <div>
-        { props.isLoggedIn && props.roles.includes("Admin") &&
-            <Admin />
-        }
         { props.isLoggedIn && props.roles.includes("Member") &&
             <Member />
         }
