@@ -82,8 +82,8 @@ namespace AuthServer
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             // var isCreated = dbContext.Database.EnsureCreated();
             // if (isCreated) return;
-            var dbInitializer = new DbInitializer(userManager);
-            dbInitializer.Initialize(dbContext).Wait();
+            // var dbInitializer = new DbInitializer(userManager);
+            // dbInitializer.Initialize(dbContext).Wait();
 
         }
     }

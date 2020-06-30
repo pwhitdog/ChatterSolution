@@ -5,3 +5,4 @@ export const LOGIN_INFORMATION = 'LOGIN_INFORMATION';
 export const SET_ROOM = 'SET_ROOM';
 export const REMOVE_ROOM = 'REMOVE_ROOM';
 export const ROOM_INFORMATION = 'ROOM_INFORMATION';
+export const SET_NAME_IN_ROOM = 'SET_NAME_IN_ROOM';

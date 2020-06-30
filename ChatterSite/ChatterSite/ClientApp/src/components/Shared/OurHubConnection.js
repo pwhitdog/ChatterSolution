@@ -1,7 +1,7 @@
 import * as signalR from "@microsoft/signalr";
 
 const OurHubConnection = async token => {
-    const connection = new signalR.HubConnectionBuilder()
+    return new signalR.HubConnectionBuilder()
         .withUrl(`https://localhost:5005/chathub`, {
             accessTokenFactory: () => {
                 return `${token}`
@@ -10,22 +10,16 @@ const OurHubConnection = async token => {
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-    async function start() {
-        try {
-            await connection.start();            
-            connection.on("Update", data => {
-                console.log(data, '*****')
-                //props.setRoom(data);
-            })
-        } catch (err) {
-            console.log(err);
-            setTimeout(() => start(), 5000);
-        }
-    }
-
-    await start();
-
-    return connection
+    // async function start() {
+    //     try {
+    //         await connection.start();
+    //     } catch (err) {
+    //         console.log(err);
+    //         setTimeout(() => start(), 5000);
+    //     }
+    // }
+    //
+    // await start();
 }
 
 export default OurHubConnection

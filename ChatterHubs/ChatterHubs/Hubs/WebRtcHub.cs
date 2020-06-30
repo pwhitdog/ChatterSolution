@@ -54,7 +54,6 @@ namespace ChatterHubs.Hubs
             {
                 // If not, let the caller know
                 await Clients.Caller.SendAsync("RoomEnded", "This room has ended.");
-                return;
             }
             
             // Add the new user

@@ -6,8 +6,7 @@ import {connect} from "react-redux";
 
 const AdminMemberTable = props => {
     const [data, setData] = useState([]);
-
-
+    console.log(props)
     useEffect(() => {
         fetch(
             AUTH_SERVER_API + 'Members', {

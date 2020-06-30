@@ -5,16 +5,27 @@ import {Button} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import useStyles from "../Shared/SharedStyles";
 import OurHubConnection from "../Shared/OurHubConnection";
+import {bindActionCreators} from "redux";
+import {removeRoom, setName, setRoom} from "../../actions/roomAction";
+import {connect} from "react-redux";
+import CreatePeerConnection from "../Shared/CreatePeerConnection";
 
 const CreateRoomForm = props => {
     const classes = useStyles();
     
     async function createRoom(roomName) {
-        const {token, username, actions } = props.props
+        const {token, username, actions } = props
+        
         const connection = await OurHubConnection(token)
-        await actions.setRoom(roomName)
+        await connection.start();
+        connection.on("Update", data => {
+            actions.setRoom(roomName)
+            actions.setName(username)
+            CreatePeerConnection(JSON.parse(data), username)
+        })      
+        
         await connection.invoke("CreateCall", username, roomName)
-            .catch(err => console.error(err));
+            .catch(err => console.error(err));       
         
     }
 
@@ -49,4 +60,23 @@ const CreateRoomForm = props => {
     )
 }
 
-export default CreateRoomForm
+const mapStateToProps = state => {
+    return {
+        username: state.login.username,
+        roles: state.login.roles,
+        token: state.login.token,
+        room: state.room.room,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        actions: bindActionCreators({
+            setRoom,
+            setName,
+            removeRoom,
+        },                          dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateRoomForm)
