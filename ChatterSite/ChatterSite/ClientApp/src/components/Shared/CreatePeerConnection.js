@@ -4,6 +4,7 @@ const CreatePeerConnection = (connData, yourName) => {
     console.log("In", yourName)
     const myId = connData.filter(p => p.Username === yourName)
     const otherId = connData.filter(p => p.Username !== yourName)
+    let conn = null
     
     if (otherId.length > 0){
         const peer = new Peer(myId[0].ConnectionId)
@@ -12,7 +13,15 @@ const CreatePeerConnection = (connData, yourName) => {
             console.log('******VAGINA****')
             conn.send('hi!');
         });
-        peer.on('connection', (conn) => {
+        peer.on('connection', (c) => {
+            if (conn && conn.open) {
+                c.on('open', function() {
+                    c.send("Already connected to another client");
+                    setTimeout(function() { c.close(); }, 500);
+                });
+                return;
+            }
+            conn = c
             conn.on('data', (data) => {
                 // Will print 'hi!'
                 console.log(data);
